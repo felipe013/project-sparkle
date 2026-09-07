@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as MeuProgressoRouteImport } from './routes/meu-progresso'
 import { Route as ModulosRouteImport } from './routes/modulos'
 import { Route as AulaLessonIdRouteImport } from './routes/aula.$lessonId'
@@ -30,6 +31,11 @@ const AdminRoute = AdminRouteImport.update({
 const BuscarRoute = BuscarRouteImport.update({
   id: '/buscar',
   path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MeuProgressoRoute = MeuProgressoRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/buscar': typeof BuscarRoute
+  '/entrar': typeof EntrarRoute
   '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
   '/aula/$lessonId': typeof AulaLessonIdRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/buscar': typeof BuscarRoute
+  '/entrar': typeof EntrarRoute
   '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
   '/aula/$lessonId': typeof AulaLessonIdRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/buscar': typeof BuscarRoute
+  '/entrar': typeof EntrarRoute
   '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
   '/aula/$lessonId': typeof AulaLessonIdRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/buscar'
+    | '/entrar'
     | '/meu-progresso'
     | '/modulos'
     | '/aula/$lessonId'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/buscar'
+    | '/entrar'
     | '/meu-progresso'
     | '/modulos'
     | '/aula/$lessonId'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/buscar'
+    | '/entrar'
     | '/meu-progresso'
     | '/modulos'
     | '/aula/$lessonId'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   BuscarRoute: typeof BuscarRoute
+  EntrarRoute: typeof EntrarRoute
   MeuProgressoRoute: typeof MeuProgressoRoute
   ModulosRoute: typeof ModulosRoute
   AulaLessonIdRoute: typeof AulaLessonIdRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/buscar'
       fullPath: '/buscar'
       preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/meu-progresso': {
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   BuscarRoute: BuscarRoute,
+  EntrarRoute: EntrarRoute,
   MeuProgressoRoute: MeuProgressoRoute,
   ModulosRoute: ModulosRoute,
   AulaLessonIdRoute: AulaLessonIdRoute,

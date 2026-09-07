@@ -6,6 +6,9 @@ export interface CourseContextValue {
   readonly lessons: readonly Lesson[];
   readonly progress: ProgressMap;
   readonly hydrated: boolean;
+  /** True once this student's progress is loaded from (and saved to) the cloud. */
+  readonly cloudSynced: boolean;
+
   getModule: (slug: string) => CourseModule | undefined;
   getLesson: (id: string) => Lesson | undefined;
   lessonsOfModule: (moduleId: string) => readonly Lesson[];

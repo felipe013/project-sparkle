@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CourseProvider } from "@/lib/course-store";
 import { SiteHeader } from "@/components/course/site-header";
+import { AuthProvider } from "@/hooks/use-auth";
+
 
 function NotFoundComponent() {
   return (
@@ -139,16 +141,19 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CourseProvider>
-        <div className="flex min-h-screen flex-col bg-background">
-          <SiteHeader />
-          <main className="flex-1">
-            {/* Required: nested routes render here. */}
-            <Outlet />
-          </main>
-          <SiteFooter />
-        </div>
-      </CourseProvider>
+      <AuthProvider>
+        <CourseProvider>
+          <div className="flex min-h-screen flex-col bg-background">
+            <SiteHeader />
+            <main className="flex-1">
+              {/* Required: nested routes render here. */}
+              <Outlet />
+            </main>
+            <SiteFooter />
+          </div>
+        </CourseProvider>
+      </AuthProvider>
     </QueryClientProvider>
+
   );
 }
