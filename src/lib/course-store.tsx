@@ -199,6 +199,15 @@ export function useCourse(): CourseContextValue {
   return context;
 }
 
+// This module exports both the context and its provider. A partial hot update
+// would recreate the context object while the mounted provider still holds the
+// old one, making every consumer throw. Force a full reload instead.
+if (import.meta.hot) {
+  import.meta.hot.accept(() => {
+    import.meta.hot?.invalidate();
+  });
+}
+
 /** Overall course completion, derived — never stored. */
 export function useCourseStats() {
   const { lessons, progress } = useCourse();
