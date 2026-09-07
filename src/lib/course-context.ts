@@ -18,6 +18,8 @@ export interface CourseContextValue {
   addLesson: (draft: LessonDraft) => void;
   updateLesson: (id: string, patch: Partial<LessonDraft>) => void;
   removeLesson: (id: string) => void;
+  /** Replaces every lesson of a module (used by the automatic YouTube import). */
+  replaceModuleLessons: (moduleId: string, drafts: readonly LessonDraft[]) => void;
   resetLessons: () => void;
 }
 
