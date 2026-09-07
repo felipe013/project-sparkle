@@ -201,7 +201,7 @@
   background-image: linear-gradient(
     to right,
     var(--color-background) 8%,
-    oklch(0.145 0.006 285.8 / 0.55) 55%,
+    color-mix(in oklab, var(--color-background) 55%, transparent) 55%,
     transparent 85%
   );
 }
