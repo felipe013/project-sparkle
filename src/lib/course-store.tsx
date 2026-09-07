@@ -188,31 +188,40 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     [orderedAll],
   );
 
-  const setWatched = useCallback((id: string, percent: number) => {
-    setProgress((current) => {
-      const clamped = Math.max(0, Math.min(100, Math.round(percent)));
-      const existing = current[id];
-      if (existing && existing.percent >= clamped && !existing.completed) return current;
-      return {
-        ...current,
-        [id]: {
+  const setWatched = useCallback(
+    (id: string, percent: number) => {
+      setProgress((current) => {
+        const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+        const existing = current[id];
+        if (existing && existing.percent >= clamped && !existing.completed) return current;
+        const entry: LessonProgress = {
           percent: clamped,
           completed: existing?.completed ?? clamped >= 95,
           updatedAt: Date.now(),
-        },
-      };
-    });
-  }, []);
+        };
+        pushProgress(id, entry);
+        return { ...current, [id]: entry };
+      });
+    },
+    [pushProgress],
+  );
 
-  const toggleCompleted = useCallback((id: string) => {
-    setProgress((current) => {
-      const completed = !current[id]?.completed;
-      return {
-        ...current,
-        [id]: { percent: completed ? 100 : 0, completed, updatedAt: Date.now() },
-      };
-    });
-  }, []);
+  const toggleCompleted = useCallback(
+    (id: string) => {
+      setProgress((current) => {
+        const completed = !current[id]?.completed;
+        const entry: LessonProgress = {
+          percent: completed ? 100 : 0,
+          completed,
+          updatedAt: Date.now(),
+        };
+        pushProgress(id, entry);
+        return { ...current, [id]: entry };
+      });
+    },
+    [pushProgress],
+  );
+
 
   const addLesson = useCallback((draft: LessonDraft) => {
     setLessons((current) => [
