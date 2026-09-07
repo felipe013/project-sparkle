@@ -1,36 +1,19 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import { COURSE_MODULES, SEED_LESSONS } from "./course-seed";
-import type { CourseModule, Lesson, LessonDraft, ProgressMap } from "./course-types";
+import { CourseContext, useCourse } from "./course-context";
+import type { CourseContextValue } from "./course-context";
+import type { Lesson, LessonDraft, ProgressMap } from "./course-types";
+
+export { useCourse } from "./course-context";
 
 const LESSONS_KEY = "mda:lessons:v2";
 const PROGRESS_KEY = "mda:progress:v2";
-
-interface CourseContextValue {
-  readonly modules: readonly CourseModule[];
-  readonly lessons: readonly Lesson[];
-  readonly progress: ProgressMap;
-  readonly hydrated: boolean;
-  getModule: (slug: string) => CourseModule | undefined;
-  getLesson: (id: string) => Lesson | undefined;
-  lessonsOfModule: (moduleId: string) => readonly Lesson[];
-  nextLesson: (id: string) => Lesson | undefined;
-  setWatched: (id: string, percent: number) => void;
-  toggleCompleted: (id: string) => void;
-  addLesson: (draft: LessonDraft) => void;
-  updateLesson: (id: string, patch: Partial<LessonDraft>) => void;
-  removeLesson: (id: string) => void;
-  resetLessons: () => void;
-}
-
-const CourseContext = createContext<CourseContextValue | null>(null);
 
 function readStorage<T>(key: string, fallback: T): T {
   try {
@@ -191,21 +174,6 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   );
 
   return <CourseContext.Provider value={value}>{children}</CourseContext.Provider>;
-}
-
-export function useCourse(): CourseContextValue {
-  const context = useContext(CourseContext);
-  if (!context) throw new Error("useCourse deve ser usado dentro de <CourseProvider>");
-  return context;
-}
-
-// This module exports both the context and its provider. A partial hot update
-// would recreate the context object while the mounted provider still holds the
-// old one, making every consumer throw. Force a full reload instead.
-if (import.meta.hot) {
-  import.meta.hot.accept(() => {
-    import.meta.hot?.invalidate();
-  });
 }
 
 /** Overall course completion, derived — never stored. */
