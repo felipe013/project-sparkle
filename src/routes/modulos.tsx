@@ -10,12 +10,12 @@ export const Route = createFileRoute("/modulos")({
       {
         name: "description",
         content:
-          "Os 12 módulos do Curso Completo de Ajustes e Reformas de Roupas, de primeiros passos a correção de erros.",
+          "Todos os módulos do Curso Completo de Ajustes e Reformas de Roupas: cintura, laterais, mangas, barras, encurtar peças, zíper, reforma, acabamentos e precificação.",
       },
       { property: "og:title", content: "Módulos do curso — Mestre dos Ajustes" },
       {
         property: "og:description",
-        content: "Navegue pelos 12 módulos de vídeoaulas de ajustes e reformas de roupas.",
+        content: "Navegue por todos os módulos de vídeoaulas de ajustes e reformas de roupas.",
       },
     ],
   }),

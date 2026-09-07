@@ -20,9 +20,14 @@ export function LessonRow({ title, subtitle, lessons, moduleSlug }: LessonRowPro
 
   return (
     <section className="py-6">
-      <div className="mx-auto flex max-w-7xl items-end justify-between gap-4 px-4 sm:px-6">
-        <div className="min-w-0">
-          <h2 className="truncate text-2xl tracking-wide sm:text-3xl">{title}</h2>
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-end gap-4 px-4 sm:px-6">
+        <div className="min-w-0 border-l-2 border-primary pl-3">
+          <div className="flex min-w-0 items-baseline gap-2.5">
+            <h2 className="truncate text-2xl tracking-wide sm:text-3xl">{title}</h2>
+            <span className="shrink-0 rounded-full bg-elevated px-2 py-0.5 text-xs tabular-nums text-muted-foreground">
+              {lessons.length} aulas
+            </span>
+          </div>
           {subtitle ? (
             <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{subtitle}</p>
           ) : null}

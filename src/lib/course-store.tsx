@@ -10,8 +10,8 @@ import {
 import { COURSE_MODULES, SEED_LESSONS } from "./course-seed";
 import type { CourseModule, Lesson, LessonDraft, ProgressMap } from "./course-types";
 
-const LESSONS_KEY = "mda:lessons:v1";
-const PROGRESS_KEY = "mda:progress:v1";
+const LESSONS_KEY = "mda:lessons:v2";
+const PROGRESS_KEY = "mda:progress:v2";
 
 interface CourseContextValue {
   readonly modules: readonly CourseModule[];

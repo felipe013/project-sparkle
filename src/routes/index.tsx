@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { HeroBanner } from "@/components/course/hero-banner";
 import { LessonRow } from "@/components/course/lesson-row";
 import { useContinueWatching, useCourse } from "@/lib/course-store";
@@ -11,12 +11,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Assista às aulas do Curso Completo de Ajustes e Reformas de Roupas: 12 módulos sobre cintura, mangas, barras, zíperes e acabamentos.",
+          "Aulas de ajuste de cintura, laterais, mangas, barras, encurtar calças, vestidos e saias, troca de zíper, reforma de peças, acabamentos e como cobrar.",
       },
       { property: "og:title", content: "Mestre dos Ajustes — Aulas de ajustes de roupas" },
       {
         property: "og:description",
-        content: "12 módulos de vídeoaulas de costura e ajustes, com progresso salvo por aluno.",
+        content:
+          "Dezenas de vídeoaulas de costura e ajustes, do primeiro alfinete ao acabamento profissional, com progresso salvo por aluno.",
       },
     ],
   }),
@@ -59,6 +60,21 @@ function HomePage() {
 
         <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
           <h2 className="text-3xl tracking-wide">Todos os módulos</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {modules.length} módulos · {lessons.length} aulas no total
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {modules.map((item) => (
+              <Link
+                key={item.id}
+                to="/modulo/$slug"
+                params={{ slug: item.slug }}
+                className="rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
         </section>
 
         {modules.map((item) => (
