@@ -240,6 +240,21 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     setLessons((current) => current.filter((item) => item.id !== id));
   }, []);
 
+  const replaceModuleLessons = useCallback(
+    (moduleId: string, drafts: readonly LessonDraft[]) => {
+      setLessons((current) => [
+        ...current.filter((item) => item.moduleId !== moduleId),
+        ...drafts.map((draft, index) => ({
+          ...draft,
+          moduleId,
+          order: index + 1,
+          id: `${moduleId}-yt-${draft.youtubeId}`,
+        })),
+      ]);
+    },
+    [],
+  );
+
   const resetLessons = useCallback(() => setLessons(SEED_LESSONS), []);
 
   const value = useMemo<CourseContextValue>(
@@ -258,6 +273,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       addLesson,
       updateLesson,
       removeLesson,
+      replaceModuleLessons,
       resetLessons,
     }),
     [
@@ -274,6 +290,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       addLesson,
       updateLesson,
       removeLesson,
+      replaceModuleLessons,
       resetLessons,
     ],
   );

@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
-import { Pencil, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { Pencil, Plus, RotateCcw, Trash2, Sparkles } from "lucide-react";
 import { LessonForm } from "@/components/course/lesson-form";
 import { useCourse } from "@/lib/course-store";
 import { youtubeThumbnail } from "@/lib/course-types";
+import { searchYoutubeLessons } from "@/lib/youtube.functions";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -147,19 +149,112 @@ function AdminPage() {
         ))}
       </ul>
 
-      <section className="mt-10 rounded-xl border border-dashed border-border p-6">
-        <h2 className="text-2xl">Busca automática no YouTube</h2>
-        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-          A estrutura já está preparada para a YouTube Data API: quando a chave for configurada,
-          este espaço passa a pesquisar vídeos por palavra-chave e preencher título, duração e
-          miniatura automaticamente. Por enquanto, o cadastro é feito colando a URL.
-        </p>
-        <input
-          disabled
-          placeholder="Pesquisar vídeos no YouTube (em breve)"
-          className="mt-4 w-full max-w-md rounded-md border border-border bg-surface px-3 py-2 text-sm text-muted-foreground opacity-60 sm:w-96"
-        />
-      </section>
+      <AutoImportPanel moduleId={moduleId} />
     </div>
+  );
+}
+
+/** Fills a module with lessons found automatically on YouTube. */
+function AutoImportPanel({ moduleId }: { moduleId: string }) {
+  const { modules, replaceModuleLessons } = useCourse();
+  const search = useServerFn(searchYoutubeLessons);
+  const currentModule = modules.find((item) => item.id === moduleId);
+  const [term, setTerm] = useState("");
+  const [count, setCount] = useState(12);
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleImport() {
+    if (!currentModule) return;
+    setBusy(true);
+    setStatus(null);
+    setError(null);
+
+    const query = term.trim() || `${currentModule.title} costura ajuste de roupas aula`;
+    const result = await search({ data: { query, maxResults: count } });
+
+    setBusy(false);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    if (result.videos.length === 0) {
+      setError("Nenhum vídeo encontrado para essa busca.");
+      return;
+    }
+
+    replaceModuleLessons(
+      moduleId,
+      result.videos.map((video, index) => ({
+        moduleId,
+        title: video.title,
+        description: video.description || currentModule.tagline,
+        youtubeId: video.youtubeId,
+        duration: video.duration,
+        order: index + 1,
+        tags: [currentModule.title],
+      })),
+    );
+    setStatus(`${result.videos.length} aulas importadas para ${currentModule.title}.`);
+  }
+
+  return (
+    <section className="mt-10 rounded-xl border border-border bg-card p-6">
+      <h2 className="flex items-center gap-2 text-2xl">
+        <Sparkles className="size-5 text-primary" aria-hidden="true" />
+        Buscar aulas automaticamente
+      </h2>
+      <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+        Procuramos vídeos públicos no YouTube sobre o tema do módulo e preenchemos título,
+        descrição, duração e miniatura. As aulas atuais deste módulo são substituídas.
+      </p>
+
+      <div className="mt-4 flex flex-wrap items-end gap-3">
+        <div className="min-w-60 flex-1">
+          <label htmlFor="busca-yt" className="mb-1.5 block text-sm text-muted-foreground">
+            Busca (opcional)
+          </label>
+          <input
+            id="busca-yt"
+            value={term}
+            onChange={(event) => setTerm(event.target.value)}
+            placeholder={
+              currentModule ? `${currentModule.title} costura ajuste de roupas aula` : "Buscar"
+            }
+            className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+          />
+        </div>
+        <div>
+          <label htmlFor="qtd-yt" className="mb-1.5 block text-sm text-muted-foreground">
+            Quantidade
+          </label>
+          <input
+            id="qtd-yt"
+            type="number"
+            min={1}
+            max={25}
+            value={count}
+            onChange={(event) => setCount(Number(event.target.value))}
+            className="w-24 rounded-md border border-border bg-surface px-3 py-2 text-sm"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => void handleImport()}
+          disabled={busy}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+        >
+          {busy ? "Buscando..." : "Buscar e preencher módulo"}
+        </button>
+      </div>
+
+      {error ? (
+        <p role="alert" className="mt-3 text-sm text-destructive">
+          {error}
+        </p>
+      ) : null}
+      {status ? <p className="mt-3 text-sm text-success">{status}</p> : null}
+    </section>
   );
 }
