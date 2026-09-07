@@ -33,16 +33,18 @@ export function HeroBanner({ lessonId }: HeroBannerProps) {
       <div className="absolute inset-0 flex items-center">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
           <div className="max-w-xl">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary">
+            <p className="flex items-center gap-2.5 text-xs uppercase tracking-[0.2em] text-primary">
+              <span className="h-px w-8 bg-primary" aria-hidden="true" />
               Curso Completo de Ajustes e Reformas de Roupas
             </p>
             <h1 className="mt-3 text-4xl leading-none tracking-wide sm:text-6xl">
               {lesson.title}
             </h1>
             <p className="mt-4 line-clamp-3 text-sm text-muted-foreground sm:text-base">
-              {lesson.description} Módulo {courseModule?.title}. {stats.total} aulas em 12 módulos,
-              do primeiro alfinete ao acabamento profissional.
+              {lesson.description} Módulo {courseModule?.title}. {stats.total} aulas em{" "}
+              {modules.length} módulos, do primeiro alfinete ao acabamento profissional.
             </p>
+
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
