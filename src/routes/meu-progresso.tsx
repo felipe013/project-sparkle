@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LessonCard } from "@/components/course/lesson-card";
 import { useContinueWatching, useCourse, useCourseStats } from "@/lib/course-store";
+import { useAuth } from "@/hooks/use-auth";
+import { CloudCheck, CloudOff } from "lucide-react";
 
 export const Route = createFileRoute("/meu-progresso")({
   head: () => ({
@@ -22,7 +24,8 @@ export const Route = createFileRoute("/meu-progresso")({
 });
 
 function ProgressPage() {
-  const { lessons, modules, progress } = useCourse();
+  const { lessons, modules, progress, cloudSynced } = useCourse();
+  const { user } = useAuth();
   const stats = useCourseStats();
   const continueWatching = useContinueWatching(24);
   const completed = lessons.filter((item) => progress[item.id]?.completed);
@@ -37,6 +40,23 @@ function ProgressPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <h1 className="text-4xl tracking-wide sm:text-5xl">Meu progresso</h1>
+
+      {user ? (
+        <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground">
+          <CloudCheck className="size-4 text-success" aria-hidden="true" />
+          {cloudSynced
+            ? `Progresso salvo na nuvem para ${user.email}`
+            : "Sincronizando seu progresso..."}
+        </p>
+      ) : (
+        <p className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground">
+          <CloudOff className="size-4" aria-hidden="true" />
+          Progresso salvo só neste aparelho.
+          <Link to="/entrar" className="font-semibold text-primary hover:underline">
+            Entrar para salvar na nuvem
+          </Link>
+        </p>
+      )}
 
       <div className="mt-6 h-2 w-full overflow-hidden rounded-full bg-surface">
         <div className="h-full bg-primary transition-all" style={{ width: `${stats.percent}%` }} />
