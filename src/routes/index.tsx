@@ -27,7 +27,10 @@ function HomePage() {
   const { modules, lessonsOfModule, lessons, progress } = useCourse();
   const continueWatching = useContinueWatching();
 
-  const newest = [...lessons].slice(0, 12);
+  // Uma aula de abertura por módulo, para dar um panorama do curso inteiro.
+  const highlights = modules
+    .map((item) => lessonsOfModule(item.id)[0])
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
   const completedLessons = lessons.filter((item) => progress[item.id]?.completed).slice(0, 12);
 
   return (
@@ -37,20 +40,16 @@ function HomePage() {
       <div className="-mt-12 relative z-10">
         <LessonRow
           title="Continue assistindo"
-          subtitle={
-            continueWatching.length > 0
-              ? "Retome de onde você parou"
-              : undefined
-          }
+          subtitle="Retome de onde você parou"
           lessons={continueWatching}
         />
 
         <LessonRow
-          title="Comece por aqui"
-          subtitle="As primeiras aulas do curso"
-          lessons={newest}
-          moduleSlug={modules[0]?.slug}
+          title="Destaques do curso"
+          subtitle="Uma aula de abertura de cada módulo"
+          lessons={highlights}
         />
+
 
         <LessonRow
           title="Aulas concluídas"
