@@ -12,8 +12,9 @@ import type { Lesson, LessonDraft, ProgressMap } from "./course-types";
 
 export { useCourse } from "./course-context";
 
-const LESSONS_KEY = "mda:lessons:v2";
-const PROGRESS_KEY = "mda:progress:v2";
+const LESSONS_KEY = "mda:lessons:v3";
+const PROGRESS_KEY = "mda:progress:v3";
+
 
 function readStorage<T>(key: string, fallback: T): T {
   try {

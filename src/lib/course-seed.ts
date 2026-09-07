@@ -324,17 +324,20 @@ export const COURSE_MODULES: readonly CourseModule[] = MODULE_SEEDS.map((seed, i
   order: index + 1,
 }));
 
+let demoVideoCursor = 0;
+
 export const SEED_LESSONS: readonly Lesson[] = MODULE_SEEDS.flatMap((seed, moduleIndex) =>
   seed.lessons.map((lesson, lessonIndex) => ({
     id: `${seed.slug}-${lessonIndex + 1}`,
     moduleId: seed.slug,
     title: lesson[0],
     description: lesson[1],
-    youtubeId: DEMO_VIDEO_IDS[(moduleIndex * 3 + lessonIndex) % DEMO_VIDEO_IDS.length]!,
+    youtubeId: DEMO_VIDEO_IDS[demoVideoCursor++ % DEMO_VIDEO_IDS.length]!,
     duration: durationFor(moduleIndex, lessonIndex),
     order: lessonIndex + 1,
     tags: lesson[2].split(",").map((tag) => tag.trim()),
   })),
 );
+
 
 export const FEATURED_LESSON_ID = "ajuste-de-cintura-3";
