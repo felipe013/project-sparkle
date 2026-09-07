@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Plataforma de vídeoaulas do Curso Completo de Ajustes e Reformas de Roupas: 12 módulos, progresso salvo e player integrado.",
+          "Plataforma de vídeoaulas do Curso Completo de Ajustes e Reformas de Roupas: módulos completos, progresso salvo e player integrado.",
       },
       { name: "author", content: "Mestre dos Ajustes" },
       { property: "og:type", content: "website" },
