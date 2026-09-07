@@ -6,9 +6,11 @@
 
 /*
  * Design system — "Mestre dos Ajustes"
- * Streaming-style dark UI: near-black canvas, elevated cards, crimson accent.
+ * Streaming-style dark UI em tons de ateliê: café/couro escuro, terracota e cremes.
  *
- * All colors are oklch semantic tokens. Never hardcode colors in components.
+ * Paleta base: #2A1F18 #452C1D #553521 #AD5C38 #F5D9B7 #FEF7E9 #FFF5E5 #FFFDF7
+ * Paletas irmãs (variações da mesma família quente) em --brand-*.
+ * All colors are semantic tokens. Never hardcode colors in components.
  */
 
 @theme inline {
