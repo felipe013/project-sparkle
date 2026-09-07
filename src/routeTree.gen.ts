@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as MeuProgressoRouteImport } from './routes/meu-progresso'
 import { Route as ModulosRouteImport } from './routes/modulos'
+import { Route as AulaLessonIdRouteImport } from './routes/aula.$lessonId'
 import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +21,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuscarRoute = BuscarRouteImport.update({
+  id: '/buscar',
+  path: '/buscar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeuProgressoRoute = MeuProgressoRouteImport.update({
+  id: '/meu-progresso',
+  path: '/meu-progresso',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModulosRoute = ModulosRouteImport.update({
   id: '/modulos',
   path: '/modulos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AulaLessonIdRoute = AulaLessonIdRouteImport.update({
+  id: '/aula/$lessonId',
+  path: '/aula/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModuloSlugRoute = ModuloSlugRouteImport.update({
@@ -31,31 +49,62 @@ const ModuloSlugRoute = ModuloSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
+  '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
+  '/aula/$lessonId': typeof AulaLessonIdRoute
   '/modulo/$slug': typeof ModuloSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
+  '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
+  '/aula/$lessonId': typeof AulaLessonIdRoute
   '/modulo/$slug': typeof ModuloSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/buscar': typeof BuscarRoute
+  '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
+  '/aula/$lessonId': typeof AulaLessonIdRoute
   '/modulo/$slug': typeof ModuloSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/modulos' | '/modulo/$slug'
+  fullPaths:
+    | '/'
+    | '/buscar'
+    | '/meu-progresso'
+    | '/modulos'
+    | '/aula/$lessonId'
+    | '/modulo/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/modulos' | '/modulo/$slug'
-  id: '__root__' | '/' | '/modulos' | '/modulo/$slug'
+  to:
+    | '/'
+    | '/buscar'
+    | '/meu-progresso'
+    | '/modulos'
+    | '/aula/$lessonId'
+    | '/modulo/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/buscar'
+    | '/meu-progresso'
+    | '/modulos'
+    | '/aula/$lessonId'
+    | '/modulo/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BuscarRoute: typeof BuscarRoute
+  MeuProgressoRoute: typeof MeuProgressoRoute
   ModulosRoute: typeof ModulosRoute
+  AulaLessonIdRoute: typeof AulaLessonIdRoute
   ModuloSlugRoute: typeof ModuloSlugRoute
 }
 
@@ -68,11 +117,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/buscar': {
+      id: '/buscar'
+      path: '/buscar'
+      fullPath: '/buscar'
+      preLoaderRoute: typeof BuscarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meu-progresso': {
+      id: '/meu-progresso'
+      path: '/meu-progresso'
+      fullPath: '/meu-progresso'
+      preLoaderRoute: typeof MeuProgressoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/modulos': {
       id: '/modulos'
       path: '/modulos'
       fullPath: '/modulos'
       preLoaderRoute: typeof ModulosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aula/$lessonId': {
+      id: '/aula/$lessonId'
+      path: '/aula/$lessonId'
+      fullPath: '/aula/$lessonId'
+      preLoaderRoute: typeof AulaLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/modulo/$slug': {
@@ -87,7 +157,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BuscarRoute: BuscarRoute,
+  MeuProgressoRoute: MeuProgressoRoute,
   ModulosRoute: ModulosRoute,
+  AulaLessonIdRoute: AulaLessonIdRoute,
   ModuloSlugRoute: ModuloSlugRoute,
 }
 export const routeTree = rootRouteImport
