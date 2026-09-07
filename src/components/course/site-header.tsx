@@ -2,7 +2,6 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Menu, Search, Scissors, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/use-auth";
 
 const NAV = [
   { to: "/", label: "Início" },
@@ -13,7 +12,6 @@ const NAV = [
 
 export function SiteHeader() {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
   const [term, setTerm] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -67,30 +65,6 @@ export function SiteHeader() {
           </div>
         </form>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          {user ? (
-            <>
-              <span className="max-w-40 truncate text-sm text-muted-foreground">
-                {user.email}
-              </span>
-              <button
-                type="button"
-                onClick={() => void signOut()}
-                className="rounded-full border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-surface"
-              >
-                Sair
-              </button>
-            </>
-          ) : (
-            <Link
-              to="/entrar"
-              className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              Entrar
-            </Link>
-          )}
-        </div>
-
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
@@ -132,26 +106,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          {user ? (
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                void signOut();
-              }}
-              className="mt-1 self-start rounded-full border border-border px-3 py-1.5 text-sm text-foreground"
-            >
-              Sair ({user.email})
-            </button>
-          ) : (
-            <Link
-              to="/entrar"
-              onClick={() => setOpen(false)}
-              className="mt-1 self-start rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground"
-            >
-              Entrar
-            </Link>
-          )}
         </nav>
       </div>
     </header>

@@ -6,9 +6,6 @@ export interface CourseContextValue {
   readonly lessons: readonly Lesson[];
   readonly progress: ProgressMap;
   readonly hydrated: boolean;
-  /** True once this student's progress is loaded from (and saved to) the cloud. */
-  readonly cloudSynced: boolean;
-
   getModule: (slug: string) => CourseModule | undefined;
   getLesson: (id: string) => Lesson | undefined;
   lessonsOfModule: (moduleId: string) => readonly Lesson[];
@@ -18,8 +15,6 @@ export interface CourseContextValue {
   addLesson: (draft: LessonDraft) => void;
   updateLesson: (id: string, patch: Partial<LessonDraft>) => void;
   removeLesson: (id: string) => void;
-  /** Replaces every lesson of a module (used by the automatic YouTube import). */
-  replaceModuleLessons: (moduleId: string, drafts: readonly LessonDraft[]) => void;
   resetLessons: () => void;
 }
 
