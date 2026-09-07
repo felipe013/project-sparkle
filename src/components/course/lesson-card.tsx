@@ -70,12 +70,17 @@ export function LessonCard({
       </div>
 
       <div className="p-4">
-        <p className="text-xs uppercase tracking-wider text-primary">{moduleTitle}</p>
+        <p className="flex items-center gap-2 text-xs uppercase tracking-wider text-primary">
+          <span className="truncate">{moduleTitle}</span>
+          <span className="shrink-0 text-muted-foreground normal-case tracking-normal">
+            Aula {lesson.order}
+          </span>
+        </p>
         <h3 className="mt-1.5 line-clamp-2 text-lg leading-tight text-card-foreground">
           {lesson.title}
         </h3>
         <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{lesson.description}</p>
-        <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+        <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors group-hover:text-primary">
           <Play className="size-3.5 fill-current" aria-hidden="true" />
           {percent > 0 && !progress?.completed ? "Continuar" : "Assistir"}
         </span>
