@@ -3,7 +3,7 @@ import { useCourse } from "@/lib/course-store";
 import { parseYoutubeId, type Lesson, type LessonDraft } from "@/lib/course-types";
 
 export interface LessonFormProps {
-  readonly lesson?: Lesson;
+  readonly lesson?: Lesson | undefined;
   readonly onDone: () => void;
 }
 

@@ -6,10 +6,10 @@ import { youtubeThumbnail, type Lesson, type LessonProgress } from "@/lib/course
 export interface LessonCardProps {
   readonly lesson: Lesson;
   readonly moduleTitle: string;
-  readonly progress?: LessonProgress;
+  readonly progress?: LessonProgress | undefined;
   /** Fixed width inside horizontal rows; full width inside grids. */
-  readonly variant?: "row" | "grid";
-  readonly className?: string;
+  readonly variant?: "row" | "grid" | undefined;
+  readonly className?: string | undefined;
 }
 
 export function LessonCard({

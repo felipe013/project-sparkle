@@ -6,9 +6,9 @@ import type { Lesson } from "@/lib/course-types";
 
 export interface LessonRowProps {
   readonly title: string;
-  readonly subtitle?: string;
+  readonly subtitle?: string | undefined;
   readonly lessons: readonly Lesson[];
-  readonly moduleSlug?: string;
+  readonly moduleSlug?: string | undefined;
 }
 
 export function LessonRow({ title, subtitle, lessons, moduleSlug }: LessonRowProps) {

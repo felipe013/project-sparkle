@@ -8,7 +8,7 @@ interface SearchParams {
 
 export const Route = createFileRoute("/buscar")({
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
-    q: typeof search.q === "string" ? search.q : "",
+    q: typeof search["q"] === "string" ? search["q"] : "",
   }),
   head: () => ({
     meta: [
