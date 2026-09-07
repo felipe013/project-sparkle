@@ -2,13 +2,16 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { COURSE_MODULES, SEED_LESSONS } from "./course-seed";
 import { CourseContext, useCourse } from "./course-context";
 import type { CourseContextValue } from "./course-context";
-import type { Lesson, LessonDraft, ProgressMap } from "./course-types";
+import type { Lesson, LessonDraft, LessonProgress, ProgressMap } from "./course-types";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
 export { useCourse } from "./course-context";
 
@@ -33,10 +36,24 @@ function writeStorage(key: string, value: unknown): void {
   }
 }
 
+/** Cloud row wins when it is further along; local wins when it is ahead. */
+function mergeEntries(local?: LessonProgress, remote?: LessonProgress): LessonProgress {
+  if (!local) return remote as LessonProgress;
+  if (!remote) return local;
+  if (local.completed !== remote.completed) return local.completed ? local : remote;
+  return local.percent >= remote.percent ? local : remote;
+}
+
 export function CourseProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
   const [lessons, setLessons] = useState<readonly Lesson[]>(SEED_LESSONS);
   const [progress, setProgress] = useState<ProgressMap>({});
   const [hydrated, setHydrated] = useState(false);
+  const [cloudSynced, setCloudSynced] = useState(false);
+  const progressRef = useRef<ProgressMap>({});
+
+  progressRef.current = progress;
 
   // Storage is browser-only: read after hydration to keep SSR markup stable.
   useEffect(() => {
@@ -52,6 +69,82 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (hydrated) writeStorage(PROGRESS_KEY, progress);
   }, [hydrated, progress]);
+
+  // Pull cloud progress on sign-in and push anything only this device knows.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!userId) {
+      setCloudSynced(false);
+      return;
+    }
+    let active = true;
+
+    void (async () => {
+      const { data, error } = await supabase
+        .from("lesson_progress")
+        .select("lesson_id, percent, completed, updated_at")
+        .eq("user_id", userId);
+
+      if (!active || error || !data) return;
+
+      const remote: Record<string, LessonProgress> = {};
+      for (const row of data) {
+        remote[row.lesson_id] = {
+          percent: row.percent,
+          completed: row.completed,
+          updatedAt: new Date(row.updated_at).getTime(),
+        };
+      }
+
+      const local = progressRef.current;
+      const merged: Record<string, LessonProgress> = {};
+      for (const id of new Set([...Object.keys(local), ...Object.keys(remote)])) {
+        merged[id] = mergeEntries(local[id], remote[id]);
+      }
+
+      const pending = Object.entries(merged).filter(([id, entry]) => {
+        const row = remote[id];
+        return !row || row.percent !== entry.percent || row.completed !== entry.completed;
+      });
+
+      if (pending.length > 0) {
+        await supabase.from("lesson_progress").upsert(
+          pending.map(([lesson_id, entry]) => ({
+            user_id: userId,
+            lesson_id,
+            percent: entry.percent,
+            completed: entry.completed,
+          })),
+          { onConflict: "user_id,lesson_id" },
+        );
+      }
+
+      if (!active) return;
+      setProgress(merged);
+      setCloudSynced(true);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [hydrated, userId]);
+
+  const pushProgress = useCallback(
+    (id: string, entry: LessonProgress) => {
+      if (!userId) return;
+      void supabase.from("lesson_progress").upsert(
+        {
+          user_id: userId,
+          lesson_id: id,
+          percent: entry.percent,
+          completed: entry.completed,
+        },
+        { onConflict: "user_id,lesson_id" },
+      );
+    },
+    [userId],
+  );
+
 
   const sorted = useMemo(
     () =>
