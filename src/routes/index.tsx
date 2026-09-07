@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { HeroBanner } from "@/components/course/hero-banner";
 import { LessonRow } from "@/components/course/lesson-row";
 import { useContinueWatching, useCourse } from "@/lib/course-store";
