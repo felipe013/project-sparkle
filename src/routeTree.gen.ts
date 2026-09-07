@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as MeuProgressoRouteImport } from './routes/meu-progresso'
 import { Route as ModulosRouteImport } from './routes/modulos'
@@ -19,6 +20,11 @@ import { Route as ModuloSlugRouteImport } from './routes/modulo.$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuscarRoute = BuscarRouteImport.update({
@@ -49,6 +55,7 @@ const ModuloSlugRoute = ModuloSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/buscar': typeof BuscarRoute
   '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/buscar': typeof BuscarRoute
   '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/buscar': typeof BuscarRoute
   '/meu-progresso': typeof MeuProgressoRoute
   '/modulos': typeof ModulosRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/buscar'
     | '/meu-progresso'
     | '/modulos'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/buscar'
     | '/meu-progresso'
     | '/modulos'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/buscar'
     | '/meu-progresso'
     | '/modulos'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   BuscarRoute: typeof BuscarRoute
   MeuProgressoRoute: typeof MeuProgressoRoute
   ModulosRoute: typeof ModulosRoute
@@ -115,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/buscar': {
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   BuscarRoute: BuscarRoute,
   MeuProgressoRoute: MeuProgressoRoute,
   ModulosRoute: ModulosRoute,
