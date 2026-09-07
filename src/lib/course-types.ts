@@ -5,6 +5,7 @@ export interface CourseModule {
   readonly slug: string;
   readonly title: string;
   readonly tagline: string;
+  readonly order: number;
   /** Reusable step-by-step template shown on every lesson of the module. */
   readonly steps: readonly string[];
 }
